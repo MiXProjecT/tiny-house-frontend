@@ -11,6 +11,17 @@
 # production
 /build
 
+# IDE
+/.idea/.gitignore
+/.idea/tiny-house-server.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/watcherTasks.xml
+/.idea/
+/.cache/
+
 # misc
 .DS_Store
 .env.local
