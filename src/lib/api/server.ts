@@ -16,7 +16,7 @@ const server = {
     });
 
     return res.json();
-  }
+  },
 };
 
 export default server;
