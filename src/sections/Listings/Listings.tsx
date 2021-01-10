@@ -1,6 +1,10 @@
 import React, { useCallback } from "react";
 import { server } from "lib/api";
-import { DeleteListingsData, DeleteListingVariables, ListingsData } from "./types";
+import {
+  DeleteListingsData,
+  DeleteListingVariables,
+  ListingsData,
+} from "./types";
 
 const LISTINGS = `
   query Listings {
