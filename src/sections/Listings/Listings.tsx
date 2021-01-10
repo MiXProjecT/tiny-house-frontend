@@ -40,12 +40,14 @@ const Listings = ({ title }: Props): JSX.Element => {
   }, []);
 
   const deleteListing = useCallback(async () => {
-    const { data } = await server.fetch<DeleteListingsData,
-      DeleteListingVariables>({
+    const { data } = await server.fetch<
+      DeleteListingsData,
+      DeleteListingVariables
+    >({
       query: DELETE_LISTING,
       variables: {
-        id: "5fd78f4e694eb75948cc29ca"
-      }
+        id: "5fd78f4e694eb75948cc29ca",
+      },
     });
     console.log(data);
   }, []);
