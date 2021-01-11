@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { server, useQuery } from "lib/api";
+import { useQuery, useMutation } from "lib/api";
 import {
   DeleteListingsData,
   DeleteListingVariables,
@@ -36,18 +36,17 @@ interface Props {
 
 const Listings = ({ title }: Props): JSX.Element => {
   const { data, loading, refetch, error } = useQuery<ListingsData>(LISTINGS);
-  const deleteListing = useCallback(
-    async (id: string) => {
-      await server.fetch<DeleteListingsData, DeleteListingVariables>({
-        query: DELETE_LISTING,
-        variables: {
-          id,
-        },
-      });
+  const [
+    deleteListing,
+    { loading: deleteListingLoading, error: deleteListingError },
+  ] = useMutation<DeleteListingsData, DeleteListingVariables>(DELETE_LISTING);
 
+  const handleDeleteListing = useCallback(
+    async (id: string) => {
+      await deleteListing({ id });
       refetch();
     },
-    [refetch]
+    [deleteListing, refetch]
   );
 
   const listings = data ? data.listings : null;
@@ -59,7 +58,10 @@ const Listings = ({ title }: Props): JSX.Element => {
           return (
             <li key={listing.id}>
               {listing.title}
-              <button onClick={() => deleteListing(listing.id)} type="button">
+              <button
+                onClick={() => handleDeleteListing(listing.id)}
+                type="button"
+              >
                 Delete listing
               </button>
             </li>
@@ -67,7 +69,7 @@ const Listings = ({ title }: Props): JSX.Element => {
         })}
       </ul>
     ),
-    [listings, deleteListing]
+    [listings, handleDeleteListing]
   );
 
   if (loading) {
@@ -78,10 +80,20 @@ const Listings = ({ title }: Props): JSX.Element => {
     return <h2>Uh, oh! Something went wrong - please try again later :(</h2>;
   }
 
+  const deleteListingLoadingMessage = deleteListingLoading ? (
+    <h4>Deletion in progress...</h4>
+  ) : null;
+
+  const deleteListingErrorMessage = deleteListingError ? (
+    <h4>Something wne wrong with deleting - please try again later :(</h4>
+  ) : null;
+
   return (
     <div>
       <h2>{title}</h2>
       {listingList}
+      {deleteListingLoadingMessage}
+      {deleteListingErrorMessage}
     </div>
   );
 };
