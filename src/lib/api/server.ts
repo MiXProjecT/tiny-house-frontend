@@ -3,10 +3,14 @@ interface Body<TVariables> {
   variables?: TVariables;
 }
 
+interface Error {
+  message: string;
+}
+
 const server = {
-  fetch: async <TData = any, TVariables = any>(
+  fetch: async <TData, TVariables = never>(
     body: Body<TVariables>
-  ): Promise<{ data: TData }> => {
+  ): Promise<{ data: TData; errors: Error[] }> => {
     const res = await fetch("/api", {
       method: "POST",
       headers: {
@@ -14,6 +18,10 @@ const server = {
       },
       body: JSON.stringify(body),
     });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch from server!");
+    }
 
     return res.json();
   },

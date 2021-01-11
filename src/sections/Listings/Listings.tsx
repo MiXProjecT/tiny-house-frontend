@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
-import { server } from "lib/api";
+import React, { useCallback, useMemo } from "react";
+import { server, useQuery } from "lib/api";
 import {
   DeleteListingsData,
   DeleteListingVariables,
+  Listing,
   ListingsData,
 } from "./types";
 
@@ -34,33 +35,53 @@ interface Props {
 }
 
 const Listings = ({ title }: Props): JSX.Element => {
-  const fetchListings = useCallback(async () => {
-    const { data } = await server.fetch<ListingsData>({ query: LISTINGS });
-    console.log(data);
-  }, []);
+  const { data, loading, refetch, error } = useQuery<ListingsData>(LISTINGS);
+  const deleteListing = useCallback(
+    async (id: string) => {
+      await server.fetch<DeleteListingsData, DeleteListingVariables>({
+        query: DELETE_LISTING,
+        variables: {
+          id,
+        },
+      });
 
-  const deleteListing = useCallback(async () => {
-    const { data } = await server.fetch<
-      DeleteListingsData,
-      DeleteListingVariables
-    >({
-      query: DELETE_LISTING,
-      variables: {
-        id: "5fd78f4e694eb75948cc29ca",
-      },
-    });
-    console.log(data);
-  }, []);
+      refetch();
+    },
+    [refetch]
+  );
+
+  const listings = data ? data.listings : null;
+
+  const listingList = useMemo(
+    () => (
+      <ul>
+        {listings?.map((listing: Listing) => {
+          return (
+            <li key={listing.id}>
+              {listing.title}
+              <button onClick={() => deleteListing(listing.id)} type="button">
+                Delete listing
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    ),
+    [listings, deleteListing]
+  );
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (error) {
+    return <h2>Uh, oh! Something went wrong - please try again later :(</h2>;
+  }
 
   return (
     <div>
       <h2>{title}</h2>
-      <button onClick={fetchListings} type="button">
-        Query Listings!
-      </button>
-      <button onClick={deleteListing} type="button">
-        Delete a listing!
-      </button>
+      {listingList}
     </div>
   );
 };
