@@ -1,0 +1,16 @@
+fragment MyListing on Listing {
+    id
+    title
+    image
+    address
+    price
+    numOfGuests
+    numOfBeds
+    rating
+}
+
+query ListingList {
+    listings {
+        ...MyListing
+    }
+}

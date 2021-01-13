@@ -1,49 +1,24 @@
 import React, { useCallback, useMemo } from "react";
-import { useQuery, useMutation } from "lib/api";
 import {
-  DeleteListingsData,
-  DeleteListingVariables,
-  Listing,
-  ListingsData,
-} from "./types";
-
-const LISTINGS = `
-  query Listings {
-    listings {
-      id
-      title
-      image
-      address
-      price
-      numOfGuests
-      numOfBeds
-      rating
-    }
-  }
-`;
-
-const DELETE_LISTING = `
-  mutation DeleteListing($id: ID!) {
-    deleteListing(id: $id) {
-      id
-    }
-  }
-`;
+  useDeleteListingMutation,
+  useListingListQuery,
+  MyListingFragment,
+} from "generated/graphql";
 
 interface Props {
   title: string;
 }
 
 const Listings = ({ title }: Props): JSX.Element => {
-  const { data, loading, refetch, error } = useQuery<ListingsData>(LISTINGS);
+  const { data, loading, refetch, error } = useListingListQuery();
   const [
     deleteListing,
     { loading: deleteListingLoading, error: deleteListingError },
-  ] = useMutation<DeleteListingsData, DeleteListingVariables>(DELETE_LISTING);
+  ] = useDeleteListingMutation();
 
   const handleDeleteListing = useCallback(
     async (id: string) => {
-      await deleteListing({ id });
+      await deleteListing({ variables: { id } });
       refetch();
     },
     [deleteListing, refetch]
@@ -54,7 +29,7 @@ const Listings = ({ title }: Props): JSX.Element => {
   const listingList = useMemo(
     () => (
       <ul>
-        {listings?.map((listing: Listing) => {
+        {listings?.map((listing: MyListingFragment) => {
           return (
             <li key={listing.id}>
               {listing.title}
