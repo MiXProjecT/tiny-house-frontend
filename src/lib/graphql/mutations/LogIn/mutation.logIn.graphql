@@ -1,0 +1,9 @@
+mutation LogIn($input: LogInInput) {
+    logIn(input: $input) {
+        id
+        token
+        avatar
+        hasWallet
+        didRequest
+    }
+}
