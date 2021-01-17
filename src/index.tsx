@@ -7,7 +7,15 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-import { Home, Host, Listing, Listings, NotFound, User } from "./sections";
+import {
+  Home,
+  Host,
+  Listing,
+  Listings,
+  NotFound,
+  User,
+  Login,
+} from "./sections";
 
 const httpLink = createHttpLink({
   uri: "/api",
@@ -22,6 +30,7 @@ const App = () => (
   <Router>
     <Switch>
       <Route exact path="/" component={Home} />
+      <Route exact path="/login" component={Login} />
       <Route exact path="/host" component={Host} />
       <Route exact path="/listing/:id" component={Listing} />
       <Route exact path="/listings/:location?" component={Listings} />
