@@ -1,4 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { Redirect } from "react-router-dom";
+import {
+  Viewer,
+  useAuthUrlQuery,
+  useLogInMutation,
+} from "lib/graphql/generated";
+import { Spin } from "antd";
+import { ErrorBanner } from "components";
+import { displaySuccessNotification, displayErrorMessage } from "utils";
 import googleLogo from "./assets/google_logo.png";
 import {
   Container,
@@ -12,9 +21,68 @@ import {
   Note,
 } from "./style";
 
-const Login = (): JSX.Element => {
+interface Props {
+  setViewer: (viewer: Viewer) => void;
+}
+
+const Login = ({ setViewer }: Props): JSX.Element => {
+  const { refetch: getAuthUrl } = useAuthUrlQuery({ skip: true });
+  const [
+    logIn,
+    { data: logInData, loading: logInLoading, error: logInError },
+  ] = useLogInMutation({
+    onCompleted: (data) => {
+      if (data?.logIn) {
+        setViewer(data.logIn);
+        displaySuccessNotification("You've successfully logged in!");
+      }
+    },
+  });
+
+  const logInRef = useRef(logIn);
+
+  useEffect(() => {
+    const code = new URL(window.location.href).searchParams.get("code");
+    if (code) {
+      logInRef.current({
+        variables: {
+          input: { code },
+        },
+      });
+    }
+  }, []);
+
+  const handleAuthorize = async () => {
+    try {
+      const { data } = await getAuthUrl();
+      window.location.href = data.authUrl;
+    } catch {
+      displayErrorMessage(
+        "Sorry! We weren't able to log you in. Please try again later Check"
+      );
+    }
+  };
+
+  if (logInLoading) {
+    return (
+      <LogInSection>
+        <Spin size="large" tip="Logging you in..." />;
+      </LogInSection>
+    );
+  }
+
+  if (logInData?.logIn) {
+    const { id: viewerId } = logInData.logIn;
+    return <Redirect to={`/user/${viewerId}`} />;
+  }
+
+  const logInErrorBannerElement = logInError ? (
+    <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later" />
+  ) : null;
+
   return (
     <LogInSection>
+      {logInErrorBannerElement}
       <Container>
         <Intro>
           <IntroTitle level={3}>
@@ -27,7 +95,7 @@ const Login = (): JSX.Element => {
             Sign in with Google to start booking available rentals!
           </IntroText>
         </Intro>
-        <GoogleButton>
+        <GoogleButton onClick={handleAuthorize}>
           <GoogleButtonLogo src={googleLogo} alt="Google Logo" />
           <GoogleButtonText>Sign in with Google</GoogleButtonText>
         </GoogleButton>
