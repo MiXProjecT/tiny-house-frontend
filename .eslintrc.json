@@ -31,7 +31,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["src/generated/graphql.tsx"],
+  "ignorePatterns": ["src/lib/graphql/generated/graphql.tsx"],
   "rules": {
     "linebreak-style": "off",
     "no-unused-vars": "warn",
