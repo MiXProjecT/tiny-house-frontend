@@ -8,6 +8,7 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
+import { Affix } from "antd";
 import {
   Home,
   Host,
@@ -16,7 +17,9 @@ import {
   NotFound,
   User,
   Login,
+  LogOut,
 } from "./sections";
+import { AppHeader } from "./regions";
 import { Viewer } from "./lib/graphql/generated";
 
 const httpLink = createHttpLink({
@@ -41,12 +44,20 @@ const App = () => {
 
   return (
     <Router>
+      <Affix offsetTop={0}>
+        <AppHeader viewer={viewer} />
+      </Affix>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route
           exact
           path="/login"
           render={() => <Login setViewer={setViewer} />}
+        />
+        <Route
+          exact
+          path="/logout"
+          render={() => <LogOut setViewer={setViewer} />}
         />
         <Route exact path="/host" component={Host} />
         <Route exact path="/listing/:id" component={Listing} />
