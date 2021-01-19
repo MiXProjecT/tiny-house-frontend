@@ -6,20 +6,18 @@ interface Props {
   description?: string;
 }
 
+const defaultMessage = "Uh oh! Something went wrong :(";
+const defaultDescription =
+  "Look like something went wrong. Please check your connection and/or try again later.";
+
 const ErrorBanner = ({ message, description }: Props): JSX.Element => (
   <ErrorBannerStyled
     banner
     closable
-    message={message}
-    description={description}
+    message={message || defaultMessage}
+    description={description || defaultDescription}
     type="error"
   />
 );
-
-ErrorBanner.defaultProps = {
-  message: "Uh oh! Something went wrong :(",
-  description:
-    "Look like something went wrong. Please check your connection and/or try again later.",
-};
 
 export default ErrorBanner;
