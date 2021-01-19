@@ -36,6 +36,7 @@
     "linebreak-style": "off",
     "no-unused-vars": "warn",
     "import/prefer-default-export": "off",
+    "react/require-default-props": "off",
     "prettier/prettier": [
       "error",
       {
