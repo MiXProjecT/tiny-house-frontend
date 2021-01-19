@@ -99,7 +99,7 @@ const Login = ({ setViewer }: Props): JSX.Element => {
             Sign in with Google to start booking available rentals!
           </IntroText>
         </Intro>
-        <GoogleButton onClick={() => getAuthUrl}>
+        <GoogleButton onClick={() => getAuthUrl()}>
           <GoogleButtonLogo src={googleLogo} alt="Google Logo" />
           <GoogleButtonText>Sign in with Google</GoogleButtonText>
         </GoogleButton>
