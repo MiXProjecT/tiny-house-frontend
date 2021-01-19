@@ -28,7 +28,7 @@ const LogOut = ({ setViewer }: Props): JSX.Element => {
 
   return logOutData?.logOut ? (
     <LogOutSection>
-      <Spin size="large" />{" "}
+      <Spin size="large" />
     </LogOutSection>
   ) : (
     <Redirect to="/" />
