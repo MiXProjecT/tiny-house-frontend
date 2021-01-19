@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import {
   Viewer,
-  useAuthUrlQuery,
+  useAuthUrlLazyQuery,
   useLogInMutation,
 } from "lib/graphql/generated";
 import { Spin } from "antd";
@@ -26,7 +26,10 @@ interface Props {
 }
 
 const Login = ({ setViewer }: Props): JSX.Element => {
-  const { refetch: getAuthUrl } = useAuthUrlQuery({ skip: true });
+  const [
+    getAuthUrl,
+    { data: authData, error: authError },
+  ] = useAuthUrlLazyQuery();
   const [
     logIn,
     { data: logInData, loading: logInLoading, error: logInError },
@@ -39,29 +42,30 @@ const Login = ({ setViewer }: Props): JSX.Element => {
     },
   });
 
-  const logInRef = useRef(logIn);
-
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
     if (code) {
-      logInRef.current({
+      logIn({
         variables: {
           input: { code },
         },
       });
     }
-  }, []);
+  }, [logIn]);
 
-  const handleAuthorize = async () => {
-    try {
-      const { data } = await getAuthUrl();
-      window.location.href = data.authUrl;
-    } catch {
+  useEffect(() => {
+    if (authData?.authUrl) {
+      window.location.href = authData.authUrl;
+    }
+  }, [authData]);
+
+  useEffect(() => {
+    if (authError) {
       displayErrorMessage(
-        "Sorry! We weren't able to log you in. Please try again later Check"
+        "Sorry! We weren't able to log you in. Please try again later"
       );
     }
-  };
+  });
 
   if (logInLoading) {
     return (
@@ -95,7 +99,7 @@ const Login = ({ setViewer }: Props): JSX.Element => {
             Sign in with Google to start booking available rentals!
           </IntroText>
         </Intro>
-        <GoogleButton onClick={handleAuthorize}>
+        <GoogleButton onClick={() => getAuthUrl}>
           <GoogleButtonLogo src={googleLogo} alt="Google Logo" />
           <GoogleButtonText>Sign in with Google</GoogleButtonText>
         </GoogleButton>
