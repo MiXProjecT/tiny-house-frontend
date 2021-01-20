@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useLogInMutation } from "lib/graphql/generated";
 import { MainLayout } from "layouts/MainLayout";
@@ -20,7 +20,7 @@ import { ViewerContext } from "./contexts/ViewerContext";
 const spinnerStyle = { alignSelf: "center" };
 
 const App = (): JSX.Element => {
-  const { viewer, setViewer } = React.useContext(ViewerContext);
+  const { viewer, setViewer } = useContext(ViewerContext);
   const [logIn, { error }] = useLogInMutation({
     onCompleted: (data) => {
       if (data?.logIn) {
