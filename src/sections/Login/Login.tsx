@@ -1,13 +1,10 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { Redirect } from "react-router-dom";
-import {
-  Viewer,
-  useAuthUrlLazyQuery,
-  useLogInMutation,
-} from "lib/graphql/generated";
+import { useAuthUrlLazyQuery, useLogInMutation } from "lib/graphql/generated";
 import { Spin } from "antd";
 import { ErrorBanner } from "components";
 import { displaySuccessNotification, displayErrorMessage } from "utils";
+import { ViewerContext } from "contexts/ViewerContext";
 import googleLogo from "./assets/google_logo.png";
 import {
   Container,
@@ -21,11 +18,8 @@ import {
   Note,
 } from "./style";
 
-interface Props {
-  setViewer: (viewer: Viewer) => void;
-}
-
-const Login = ({ setViewer }: Props): JSX.Element => {
+const Login = (): JSX.Element => {
+  const { setViewer } = useContext(ViewerContext);
   const [
     getAuthUrl,
     { data: authData, error: authError },
