@@ -1,8 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { HomeOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Button, Avatar, Affix } from "antd";
-import { Viewer } from "lib/graphql/generated";
 import AppHeaderSkeleton from "./AppHeader.skeleton";
 import logo from "./assets/tinyhouse-logo.png";
 import {
@@ -16,14 +15,12 @@ import {
   LogoLink,
   Logo,
 } from "./style";
+import { ViewerContext } from "../../contexts/ViewerContext";
 
 const { Item } = Menu;
 
-interface Props {
-  viewer: Viewer;
-}
-
-const AppHeader = ({ viewer }: Props): JSX.Element => {
+const AppHeader = (): JSX.Element => {
+  const { viewer } = useContext(ViewerContext);
   const userAvatar = useMemo(() => <Avatar src={viewer.avatar} />, [
     viewer.avatar,
   ]);
@@ -32,8 +29,10 @@ const AppHeader = ({ viewer }: Props): JSX.Element => {
       viewer.id ? (
         <UserLinksSubMenu title={userAvatar}>
           <Item key="user">
-            <UserOutlined />
-            Profile
+            <Link to={`/user/${viewer.id}`}>
+              <UserOutlined />
+              Profile
+            </Link>
           </Item>
           <Item key="logout">
             <Link to="/logout">
