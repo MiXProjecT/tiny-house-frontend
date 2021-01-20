@@ -10,6 +10,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
 import App from "./App";
+import { ViewerProvider } from "./contexts/ViewerContext";
 
 const httpLink = createHttpLink({
   uri: "/api",
@@ -29,11 +30,15 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Router>
-      <App />
-    </Router>
+    <ViewerProvider>
+      <Router>
+        <App />
+      </Router>
+    </ViewerProvider>
   </ApolloProvider>,
   document.getElementById("root")
 );

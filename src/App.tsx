@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Route, Switch } from "react-router-dom";
-import { useLogInMutation, Viewer } from "lib/graphql/generated";
+import { useLogInMutation } from "lib/graphql/generated";
 import { MainLayout } from "layouts/MainLayout";
 import "./styles/index.css";
 import { Spin } from "antd";
@@ -15,19 +15,12 @@ import {
   LogOut,
 } from "./sections";
 import { ErrorBanner } from "./components";
-
-const initialViewer: Viewer = {
-  id: null,
-  token: null,
-  avatar: null,
-  hasWallet: null,
-  didRequest: false,
-};
+import { ViewerContext } from "./contexts/ViewerContext";
 
 const spinnerStyle = { alignSelf: "center" };
 
 const App = (): JSX.Element => {
-  const [viewer, setViewer] = useState<Viewer>(initialViewer);
+  const { viewer, setViewer } = React.useContext(ViewerContext);
   const [logIn, { error }] = useLogInMutation({
     onCompleted: (data) => {
       if (data?.logIn) {
@@ -55,27 +48,19 @@ const App = (): JSX.Element => {
   );
   if (!viewer.didRequest && !error) {
     return (
-      <MainLayout viewer={viewer}>
+      <MainLayout>
         <Spin size="large" tip="Launching TinyHouse app" style={spinnerStyle} />
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout viewer={viewer}>
+    <MainLayout>
       {logInErrorBannerElement}
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route
-          exact
-          path="/login"
-          render={() => <Login setViewer={setViewer} />}
-        />
-        <Route
-          exact
-          path="/logout"
-          render={() => <LogOut setViewer={setViewer} />}
-        />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/logout" component={LogOut} />
         <Route exact path="/host" component={Host} />
         <Route exact path="/listing/:id" component={Listing} />
         <Route exact path="/listings/:location?" component={Listings} />
