@@ -25,7 +25,7 @@ const UserProfile = ({ user, viewerIsUser }: Props): JSX.Element => {
             Connect with Stripe
           </ConnectWithStripeButton>
           <Paragraph type="secondary">
-            TinyHouse uses
+            TinyHouse uses<span> </span>
             <a
               href="https://stripe.com/en-US/connect"
               target="_blank"
@@ -33,7 +33,8 @@ const UserProfile = ({ user, viewerIsUser }: Props): JSX.Element => {
             >
               Stripe
             </a>
-            to help transfer your earnings in a secure and truster manner.
+            <span> </span>to help transfer your earnings in a secure and truster
+            manner.
           </Paragraph>
         </>
       ) : null,
@@ -49,7 +50,7 @@ const UserProfile = ({ user, viewerIsUser }: Props): JSX.Element => {
         Name: <Text strong>{user.name}</Text>
       </Paragraph>
       <Paragraph>
-        Contact: <Text>{user.contact}</Text>
+        Contact: <Text strong>{user.contact}</Text>
       </Paragraph>
       {additionalDetailsSection}
     </UserCard>
