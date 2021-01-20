@@ -1,0 +1,14 @@
+fragment UserInfo on User {
+    id
+    name
+    avatar
+    contact
+    hasWallet
+    income
+}
+
+query User($id: ID!) {
+    user(id: $id) {
+        ...UserInfo
+    }
+}

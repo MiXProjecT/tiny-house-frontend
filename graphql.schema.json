@@ -378,7 +378,7 @@
             "deprecationReason": null
           },
           {
-            "name": "bookigsIndex",
+            "name": "bookingsIndex",
             "description": null,
             "args": [],
             "type": {
