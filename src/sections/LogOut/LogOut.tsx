@@ -14,6 +14,7 @@ const LogOut = ({ setViewer }: Props): JSX.Element => {
     onCompleted: (data) => {
       if (data?.logOut) {
         setViewer(data.logOut);
+        sessionStorage.removeItem("token");
         displaySuccessNotification("You've successfully logged out!");
       }
     },

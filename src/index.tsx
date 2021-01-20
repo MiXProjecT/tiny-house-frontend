@@ -7,6 +7,7 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
 import App from "./App";
 
@@ -14,8 +15,17 @@ const httpLink = createHttpLink({
   uri: "/api",
 });
 
+const authLink = setContext(() => {
+  const token = sessionStorage.getItem("token");
+  return {
+    headers: {
+      "X-CSRF-TOKEN": token || "",
+    },
+  };
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

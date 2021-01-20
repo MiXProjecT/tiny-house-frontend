@@ -35,8 +35,9 @@ const Login = ({ setViewer }: Props): JSX.Element => {
     { data: logInData, loading: logInLoading, error: logInError },
   ] = useLogInMutation({
     onCompleted: (data) => {
-      if (data?.logIn) {
+      if (data?.logIn?.token) {
         setViewer(data.logIn);
+        sessionStorage.setItem("token", data.logIn.token);
         displaySuccessNotification("You've successfully logged in!");
       }
     },
