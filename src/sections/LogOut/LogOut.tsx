@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Spin } from "antd";
 import { Redirect } from "react-router-dom";
-import { Viewer, useLogOutMutation } from "lib/graphql/generated";
+import { useLogOutMutation } from "lib/graphql/generated";
 import { displayErrorMessage, displaySuccessNotification } from "utils";
+import { ViewerContext } from "contexts/ViewerContext";
 import { LogOutSection } from "./style";
 
-interface Props {
-  setViewer: (viewer: Viewer) => void;
-}
-
-const LogOut = ({ setViewer }: Props): JSX.Element => {
+const LogOut = (): JSX.Element => {
+  const { setViewer } = useContext(ViewerContext);
   const [logOut, { data: logOutData }] = useLogOutMutation({
     onCompleted: (data) => {
       if (data?.logOut) {
