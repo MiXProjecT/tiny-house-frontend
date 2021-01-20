@@ -19,6 +19,75 @@ export type Scalars = {
   Upload: any;
 };
 
+export type Booking = {
+  __typename?: "Booking";
+  id: Scalars["ID"];
+  listing: Listing;
+  tenant: User;
+  checkIn: Scalars["String"];
+  checkOut: Scalars["String"];
+};
+
+export type Bookings = {
+  __typename?: "Bookings";
+  total: Scalars["Int"];
+  result: Array<Booking>;
+};
+
+export enum ListingType {
+  Apartment = "APARTMENT",
+  House = "HOUSE",
+}
+
+export type Listing = {
+  __typename?: "Listing";
+  id: Scalars["ID"];
+  title: Scalars["String"];
+  description: Scalars["String"];
+  image: Scalars["String"];
+  host: User;
+  type: ListingType;
+  address: Scalars["String"];
+  city: Scalars["String"];
+  bookings?: Maybe<Bookings>;
+  bookigsIndex: Scalars["String"];
+  price: Scalars["Int"];
+  NumOfGuests: Scalars["Int"];
+};
+
+export type ListingBookingsArgs = {
+  limit: Scalars["Int"];
+  page: Scalars["Int"];
+};
+
+export type Listings = {
+  __typename?: "Listings";
+  total: Scalars["Int"];
+  result: Array<Listing>;
+};
+
+export type User = {
+  __typename?: "User";
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  avatar: Scalars["String"];
+  contact: Scalars["String"];
+  hasWallet: Scalars["Boolean"];
+  income?: Maybe<Scalars["Int"]>;
+  bookings?: Maybe<Bookings>;
+  listings: Listings;
+};
+
+export type UserBookingsArgs = {
+  limit: Scalars["Int"];
+  page: Scalars["Int"];
+};
+
+export type UserListingsArgs = {
+  limit: Scalars["Int"];
+  page: Scalars["Int"];
+};
+
 export type Viewer = {
   __typename?: "Viewer";
   id?: Maybe<Scalars["ID"]>;
@@ -31,6 +100,11 @@ export type Viewer = {
 export type Query = {
   __typename?: "Query";
   authUrl: Scalars["String"];
+  user: User;
+};
+
+export type QueryUserArgs = {
+  id: Scalars["ID"];
 };
 
 export type LogInInput = {
