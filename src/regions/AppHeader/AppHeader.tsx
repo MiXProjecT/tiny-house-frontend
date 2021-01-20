@@ -1,8 +1,9 @@
 import React, { useMemo } from "react";
 import { HomeOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Button, Avatar } from "antd";
+import { Button, Avatar, Affix } from "antd";
 import { Viewer } from "lib/graphql/generated";
+import AppHeaderSkeleton from "./AppHeader.skeleton";
 import logo from "./assets/tinyhouse-logo.png";
 import {
   Header,
@@ -52,25 +53,29 @@ const AppHeader = ({ viewer }: Props): JSX.Element => {
   );
 
   return (
-    <Header role="banner">
-      <Navigation>
-        <Menu mode="horizontal" selectable={false}>
-          <ItemLogo key="home">
-            <LogoLink to="/">
-              <Logo src={logo} />
-            </LogoLink>
-          </ItemLogo>
-          <ItemHome key="host">
-            <Link to="/host">
-              <HomeOutlined />
-              Home
-            </Link>
-          </ItemHome>
-          {subMenuLogin}
-        </Menu>
-      </Navigation>
-    </Header>
+    <Affix offsetTop={0}>
+      <Header role="banner">
+        <Navigation>
+          <Menu mode="horizontal" selectable={false}>
+            <ItemLogo key="home">
+              <LogoLink to="/">
+                <Logo src={logo} />
+              </LogoLink>
+            </ItemLogo>
+            <ItemHome key="host">
+              <Link to="/host">
+                <HomeOutlined />
+                Home
+              </Link>
+            </ItemHome>
+            {subMenuLogin}
+          </Menu>
+        </Navigation>
+      </Header>
+    </Affix>
   );
 };
+
+AppHeader.Skeleton = AppHeaderSkeleton;
 
 export default AppHeader;
