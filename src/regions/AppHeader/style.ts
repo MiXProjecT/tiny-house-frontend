@@ -21,6 +21,11 @@ export const LogoLink = styled(Link)`
   padding: 0 20px;
 `;
 
+export const LogoBlock = styled.div`
+  display: inline-block;
+  padding-left: 60px;
+`;
+
 export const Logo = styled.img`
   width: 36px;
 `;
