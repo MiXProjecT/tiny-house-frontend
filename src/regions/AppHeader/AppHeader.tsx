@@ -64,7 +64,7 @@ const AppHeader = (): JSX.Element => {
             <ItemHome key="host">
               <Link to="/host">
                 <HomeOutlined />
-                Home
+                Host
               </Link>
             </ItemHome>
             {subMenuLogin}
