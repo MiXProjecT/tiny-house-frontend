@@ -1,18 +1,16 @@
-import React from "react";
-import { Viewer } from "lib/graphql/generated";
+import React, { useContext } from "react";
 import { AppHeader } from "regions";
+import { ViewerContext } from "contexts/ViewerContext";
 import { Layout } from "./style";
 
-interface Props {
-  children?: React.ReactNode | React.ReactChild[];
-  viewer: Viewer;
-}
-
-const MainLayout = ({ children, viewer }: Props): JSX.Element => (
-  <Layout id="app">
-    {viewer.didRequest ? <AppHeader viewer={viewer} /> : <AppHeader.Skeleton />}
-    {children}
-  </Layout>
-);
+const MainLayout: React.FC = ({ children }): JSX.Element => {
+  const { viewer } = useContext(ViewerContext);
+  return (
+    <Layout id="app">
+      {viewer.didRequest ? <AppHeader /> : <AppHeader.Skeleton />}
+      {children}
+    </Layout>
+  );
+};
 
 export default MainLayout;
