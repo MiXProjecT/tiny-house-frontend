@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Redirect } from "react-router-dom";
 import {
   Viewer,
@@ -67,6 +67,14 @@ const Login = ({ setViewer }: Props): JSX.Element => {
     }
   });
 
+  const logInErrorBannerElement = useMemo(
+    () =>
+      logInError ? (
+        <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later" />
+      ) : null,
+    [logInError]
+  );
+
   if (logInLoading) {
     return (
       <LogInSection>
@@ -79,10 +87,6 @@ const Login = ({ setViewer }: Props): JSX.Element => {
     const { id: viewerId } = logInData.logIn;
     return <Redirect to={`/user/${viewerId}`} />;
   }
-
-  const logInErrorBannerElement = logInError ? (
-    <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later" />
-  ) : null;
 
   return (
     <LogInSection>
