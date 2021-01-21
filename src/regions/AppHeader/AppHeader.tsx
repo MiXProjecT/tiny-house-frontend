@@ -2,6 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { HomeOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Button, Avatar, Affix } from "antd";
+import { ViewerContext } from "contexts/ViewerContext";
 import AppHeaderSkeleton from "./AppHeader.skeleton";
 import logo from "./assets/tinyhouse-logo.png";
 import {
@@ -15,7 +16,6 @@ import {
   LogoLink,
   Logo,
 } from "./style";
-import { ViewerContext } from "../../contexts/ViewerContext";
 
 const { Item } = Menu;
 
