@@ -7,8 +7,43 @@ fragment UserInfo on User {
     income
 }
 
-query User($id: ID!) {
+fragment UserBookings on User {
+    bookings(limit: $limit, page: $bookingsPage) {
+        result {
+            id
+            listing {
+                id
+                title
+                image
+                address
+                price
+                numOfGuests
+            }
+            checkIn
+            checkOut
+        }
+        total
+    }
+}
+
+fragment UserListings on User {
+    listings(limit: $limit, page: $listingsPage){
+        result {
+            id
+            title
+            image
+            address
+            price
+            numOfGuests
+        }
+        total
+    }
+}
+
+query User($id: ID!, $bookingsPage: Int!, $listingsPage: Int!, $limit: Int!) {
     user(id: $id) {
         ...UserInfo
+        ...UserBookings
+        ...UserListings
     }
 }
