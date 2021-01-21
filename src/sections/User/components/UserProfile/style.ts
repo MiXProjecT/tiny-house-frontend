@@ -7,10 +7,11 @@ export const UserCard = styled(Card)`
   max-width: 400px;
   margin: 0 auto;
   height: max-content;
+  width: 100%;
 
   .ant-card-body {
     display: grid;
-    grid-template-rows: repeat(12, auto);
+    grid-template-rows: repeat(10, auto);
 
     &:before {
       content: none;
