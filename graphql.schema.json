@@ -410,7 +410,7 @@
             "deprecationReason": null
           },
           {
-            "name": "NumOfGuests",
+            "name": "numOfGuests",
             "description": null,
             "args": [],
             "type": {

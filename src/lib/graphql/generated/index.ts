@@ -52,7 +52,7 @@ export type Listing = {
   bookings?: Maybe<Bookings>;
   bookingsIndex: Scalars["String"];
   price: Scalars["Int"];
-  NumOfGuests: Scalars["Int"];
+  numOfGuests: Scalars["Int"];
 };
 
 export type ListingBookingsArgs = {
@@ -155,12 +155,46 @@ export type UserInfoFragment = { __typename?: "User" } & Pick<
   "id" | "name" | "avatar" | "contact" | "hasWallet" | "income"
 >;
 
+export type UserBookingsFragment = { __typename?: "User" } & {
+  bookings?: Maybe<
+    { __typename?: "Bookings" } & Pick<Bookings, "total"> & {
+        result: Array<
+          { __typename?: "Booking" } & Pick<
+            Booking,
+            "id" | "checkIn" | "checkOut"
+          > & {
+              listing: { __typename?: "Listing" } & Pick<
+                Listing,
+                "id" | "title" | "image" | "address" | "price" | "numOfGuests"
+              >;
+            }
+        >;
+      }
+  >;
+};
+
+export type UserListingsFragment = { __typename?: "User" } & {
+  listings: { __typename?: "Listings" } & Pick<Listings, "total"> & {
+      result: Array<
+        { __typename?: "Listing" } & Pick<
+          Listing,
+          "id" | "title" | "image" | "address" | "price" | "numOfGuests"
+        >
+      >;
+    };
+};
+
 export type UserQueryVariables = Exact<{
   id: Scalars["ID"];
+  bookingsPage: Scalars["Int"];
+  listingsPage: Scalars["Int"];
+  limit: Scalars["Int"];
 }>;
 
 export type UserQuery = { __typename?: "Query" } & {
-  user: { __typename?: "User" } & UserInfoFragment;
+  user: { __typename?: "User" } & UserInfoFragment &
+    UserBookingsFragment &
+    UserListingsFragment;
 };
 
 export const UserInfoFragmentDoc = gql`
@@ -171,6 +205,41 @@ export const UserInfoFragmentDoc = gql`
     contact
     hasWallet
     income
+  }
+`;
+export const UserBookingsFragmentDoc = gql`
+  fragment UserBookings on User {
+    bookings(limit: $limit, page: $bookingsPage) {
+      result {
+        id
+        listing {
+          id
+          title
+          image
+          address
+          price
+          numOfGuests
+        }
+        checkIn
+        checkOut
+      }
+      total
+    }
+  }
+`;
+export const UserListingsFragmentDoc = gql`
+  fragment UserListings on User {
+    listings(limit: $limit, page: $listingsPage) {
+      result {
+        id
+        title
+        image
+        address
+        price
+        numOfGuests
+      }
+      total
+    }
   }
 `;
 export const LogInDocument = gql`
@@ -316,12 +385,16 @@ export type AuthUrlQueryResult = Apollo.QueryResult<
   AuthUrlQueryVariables
 >;
 export const UserDocument = gql`
-  query User($id: ID!) {
+  query User($id: ID!, $bookingsPage: Int!, $listingsPage: Int!, $limit: Int!) {
     user(id: $id) {
       ...UserInfo
+      ...UserBookings
+      ...UserListings
     }
   }
   ${UserInfoFragmentDoc}
+  ${UserBookingsFragmentDoc}
+  ${UserListingsFragmentDoc}
 `;
 
 /**
@@ -337,6 +410,9 @@ export const UserDocument = gql`
  * const { data, loading, error } = useUserQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      bookingsPage: // value for 'bookingsPage'
+ *      listingsPage: // value for 'listingsPage'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
